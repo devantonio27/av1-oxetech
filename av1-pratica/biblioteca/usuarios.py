@@ -21,3 +21,19 @@ class Usuario:
     @property
     def multa_por_dia(self):
         return 3
+
+
+@dataclass
+class UsuarioComum(Usuario):
+
+    @property
+    def limite_emprestimos(self):
+        return 3
+
+    @property
+    def prazo_emprestimo(self):
+        return 7
+
+    @property
+    def multa_por_dia(self):
+        return 2
