@@ -68,23 +68,34 @@ class BibliotecaService:
         return True
 
     def devolver(self, usuario_id: str, livro_id: str):
-    emprestimo = self._encontrar_emprestimo_ativo(usuario_id, livro_id)
+        emprestimo = self._encontrar_emprestimo_ativo(usuario_id, livro_id)
 
-    if emprestimo is None:
-        return -1
+        if emprestimo is None:
+            return -1
 
-    livro = self.livros[livro_id]
-    usuario = self.usuarios[usuario_id]
+        livro = self.livros[livro_id]
+        usuario = self.usuarios[usuario_id]
 
-    emprestimo.devolvido = True
-    livro.quantidade += 1
-    usuario.emprestimos_ativos -= 1
+        emprestimo.devolvido = True
+        livro.quantidade += 1
+        usuario.emprestimos_ativos -= 1
 
-    hoje = date.today()
+        hoje = date.today()
 
-    if hoje <= emprestimo.vencimento:
-        return 0
+        if hoje <= emprestimo.vencimento:
+            return 0
 
-    dias_atraso = (hoje - emprestimo.vencimento).days
+        dias_atraso = (hoje - emprestimo.vencimento).days
 
-    return dias_atraso * usuario.multa_por_dia
+        return dias_atraso * usuario.multa_por_dia
+
+        def _encontrar_emprestimo_ativo(self, usuario_id: str, livro_id: str):
+            for emprestimo in self.emprestimos:
+                if (
+                    emprestimo.usuario_id == usuario_id
+                    and emprestimo.livro_id == livro_id
+                    and not emprestimo.devolvido
+                ):
+                    return emprestimo
+
+            return None
