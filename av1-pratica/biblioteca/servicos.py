@@ -32,3 +32,37 @@ class BibliotecaService:
 
     def adicionar_usuario(self, usuario: Usuario):
         self.usuarios[usuario.id] = usuario
+
+    def emprestar(self, usuario_id: str, livro_id: str):
+        if usuario_id not in self.usuarios:
+            return False
+
+        if livro_id not in self.livros:
+            return False
+
+        usuario = self.usuarios[usuario_id]
+        livro = self.livros[livro_id]
+
+        if usuario.bloqueado:
+            return False
+
+        if livro.quantidade <= 0:
+            return False
+
+        if usuario.emprestimos_ativos >= usuario.limite_emprestimos:
+            return False
+
+        livro.quantidade -= 1
+        usuario.emprestimos_ativos += 1
+
+        vencimento = date.today() + timedelta(days=usuario.prazo_emprestimo)
+
+        emprestimo = Emprestimo(
+            usuario_id=usuario_id,
+            livro_id=livro_id,
+            vencimento=vencimento
+        )
+
+        self.emprestimos.append(emprestimo)
+
+        return True
