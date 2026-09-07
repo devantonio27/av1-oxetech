@@ -1,8 +1,11 @@
+import logging
+
 from datetime import date, timedelta
 
 from biblioteca.modelos import Emprestimo, Livro
 from biblioteca.usuarios import Usuario
 
+logger = logging.getLogger(__name__)
 
 class BibliotecaService:
 
@@ -35,21 +38,26 @@ class BibliotecaService:
 
     def emprestar(self, usuario_id: str, livro_id: str):
         if usuario_id not in self.usuarios:
+            logger.warning("Usuário não encontrado")
             return False
 
         if livro_id not in self.livros:
+            logger.warning("Livro não encontrado")
             return False
 
         usuario = self.usuarios[usuario_id]
         livro = self.livros[livro_id]
 
         if usuario.bloqueado:
+            logger.warning("Usuário bloqueado")
             return False
 
         if livro.quantidade <= 0:
+            logger.warning("Livro indisponivel")
             return False
 
         if usuario.emprestimos_ativos >= usuario.limite_emprestimos:
+            logger.warning("Usuário atingiu o limite de empréstimos")
             return False
 
         livro.quantidade -= 1
@@ -64,6 +72,7 @@ class BibliotecaService:
         )
 
         self.emprestimos.append(emprestimo)
+        logger.info("Empréstimo realizado com sucesso")
 
         return True
 
