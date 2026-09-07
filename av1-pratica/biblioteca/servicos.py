@@ -80,6 +80,7 @@ class BibliotecaService:
         emprestimo = self._encontrar_emprestimo_ativo(usuario_id, livro_id)
 
         if emprestimo is None:
+            logger.warning("Empréstimo não encontrado")
             return -1
 
         livro = self.livros[livro_id]
@@ -92,19 +93,22 @@ class BibliotecaService:
         hoje = date.today()
 
         if hoje <= emprestimo.vencimento:
+            logger.info("Livro devolvido sem multa")
             return 0
 
         dias_atraso = (hoje - emprestimo.vencimento).days
+        multa = dias_atraso * usuario.multa_por_dia
 
-        return dias_atraso * usuario.multa_por_dia
+        logger.info(f"Livro devolvido com {dias_atraso} dias de atraso. Multa: R$ {multa:.2f}")
+        return multa
 
-        def _encontrar_emprestimo_ativo(self, usuario_id: str, livro_id: str):
-            for emprestimo in self.emprestimos:
-                if (
-                    emprestimo.usuario_id == usuario_id
-                    and emprestimo.livro_id == livro_id
-                    and not emprestimo.devolvido
-                ):
-                    return emprestimo
+    def _encontrar_emprestimo_ativo(self, usuario_id: str, livro_id: str):
+        for emprestimo in self.emprestimos:
+            if (
+                emprestimo.usuario_id == usuario_id
+                and emprestimo.livro_id == livro_id
+                and not emprestimo.devolvido
+            ):
+                return emprestimo
 
-            return None
+        return None
