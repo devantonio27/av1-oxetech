@@ -67,3 +67,18 @@ class Funcionario(Usuario):
     @property
     def multa_por_dia(self):
         return 0
+
+@dataclass
+class Professor(Usuario):
+
+    @property
+    def limite_emprestimos(self):
+        return 15
+
+    @property
+    def prazo_emprestimo(self):
+        return 60
+
+    @property
+    def multa_por_dia(self):
+        return 0
