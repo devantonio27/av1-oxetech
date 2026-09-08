@@ -23,3 +23,21 @@ class RelatorioBiblioteca:
             )
 
         return "\n".join(linhas)
+
+    def gerar_resumo(self):
+        livros_disponiveis = sum(
+            livro.quantidade
+            for livro in self.biblioteca.livros.values()
+        )
+
+        livros_total = sum(
+            livro.quantidade_total
+            for livro in self.biblioteca.livros.values()
+        )
+
+        total_usuarios = len(self.biblioteca.usuarios)
+
+        return (
+            f"Livros: {livros_disponiveis}/{livros_total} disponíveis | "
+            f"Usuários: {total_usuarios}"
+        )

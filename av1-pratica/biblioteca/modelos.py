@@ -18,3 +18,8 @@ class Emprestimo:
     livro_id: str
     vencimento: date
     devolvido: bool = False
+
+@dataclass
+class Reserva:
+    usuario_id: str
+    livro_id: str

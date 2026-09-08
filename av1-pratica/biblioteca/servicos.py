@@ -2,7 +2,7 @@ import logging
 
 from datetime import date, timedelta
 
-from biblioteca.modelos import Emprestimo, Livro
+from biblioteca.modelos import Emprestimo, Livro, Reserva
 from biblioteca.usuarios import Usuario
 
 logger = logging.getLogger(__name__)
@@ -13,6 +13,7 @@ class BibliotecaService:
         self.livros = {}
         self.usuarios = {}
         self.emprestimos = []
+        self.reservas = []
 
     def adicionar_livro(
         self,
@@ -112,3 +113,24 @@ class BibliotecaService:
                 return emprestimo
 
         return None
+
+    def reservar(self, usuario_id: str, livro_id: str):
+        if usuario_id not in self.usuarios:
+            return False
+
+        if livro_id not in self.livros:
+            return False
+
+        livro = self.livros[livro_id]
+
+        if livro.quantidade > 0:
+            return False
+
+        reserva = Reserva(
+            usuario_id=usuario_id,
+            livro_id=livro_id
+        )
+
+        self.reservas.append(reserva)
+
+        return True
