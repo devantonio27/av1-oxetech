@@ -63,6 +63,12 @@ print("========== CENARIO 2: livro esgotado ==========")
 
 print(biblioteca.emprestar("U1", "L2"))
 
+print()
+print("========== CENARIO 3: reserva de livro indisponivel ==========")
+
+print(biblioteca.reservar("U4", "L2"))
+
+
 
 print()
 print("========== CENARIO 3: limite de emprestimos ==========")
@@ -128,11 +134,6 @@ for emprestimo in biblioteca.emprestimos:
 
 print("Multa Carla:", biblioteca.devolver("U3", "L3"))
 
-
-print()
-print("========== CENARIO 6: reserva ==========")
-
-print(biblioteca.reservar("U4", "L2"))
 
 
 print()
